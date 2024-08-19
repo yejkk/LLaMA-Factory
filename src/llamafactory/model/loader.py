@@ -149,7 +149,16 @@ def load_model(
             model = AutoModelForVision2Seq.from_pretrained(**init_kwargs)
         elif model_args.train_from_scratch:
             model = AutoModelForCausalLM.from_config(config)
-        else:
+        elif "DCLM" in model_args.model_name_or_path or "dclm" in model_args.model_name_or_path :
+            init_kwargs["torch_dtype"]='auto'
+            need_to_gpu = False
+            if "device_map" in init_kwargs and init_kwargs["device_map"] == "auto":
+                init_kwargs["device_map"] = None
+                need_to_gpu = True
+            model = AutoModelForCausalLM.from_pretrained(**init_kwargs)
+            if need_to_gpu:  
+                model = model.to(device = torch.device("cuda"))  
+        else :
             model = AutoModelForCausalLM.from_pretrained(**init_kwargs)
 
         if model_args.mixture_of_depths == "convert":

@@ -1,0 +1,17 @@
+### model
+model_name_or_path: /opt/services/yx_test/llama-factory-new/saves/llama3.1-8b-20240816-13/full/sft
+
+### method
+finetuning_type: full
+
+### dataset
+task: mmlu_test # choices: [mmlu_test, ceval_validation, cmmlu_test]
+template: llama3
+lang: en
+n_shot: 5
+
+### output
+save_dir: saves/llama3.1-8b-20240816-13/eval
+
+### eval
+batch_size: 2

@@ -64,7 +64,7 @@ def main():
         long_description_content_type="text/markdown",
         keywords=["LLaMA", "BLOOM", "Falcon", "LLM", "ChatGPT", "transformer", "pytorch", "deep learning"],
         license="Apache 2.0 License",
-        url="https://github.com/hiyouga/LLaMA-Factory",
+        url="file:///opt/services/yx_test/llama-factory-new",
         package_dir={"": "src"},
         packages=find_packages("src"),
         python_requires=">=3.8.0",

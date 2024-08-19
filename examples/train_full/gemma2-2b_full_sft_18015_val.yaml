@@ -1,0 +1,17 @@
+### model
+model_name_or_path: /opt/services/yx_test/llama-factory-new/saves/gemma2-2b-it-20240801/full/sft
+
+### method
+finetuning_type: full
+
+### dataset
+task: mmlu_test # choices: [mmlu_test, ceval_validation, cmmlu_test]
+template: gemma
+lang: en
+n_shot: 5
+
+### output
+save_dir: saves/gemma2-2b-it-20240801/eval_2
+
+### eval
+batch_size: 2

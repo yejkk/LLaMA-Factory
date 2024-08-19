@@ -1,0 +1,17 @@
+### model
+model_name_or_path: /data/models/ihandy/Companion-Chat-L3-8B-20240701-v1
+
+### method
+finetuning_type: full
+
+### dataset
+task: mmlu_test # choices: [mmlu_test, ceval_validation, cmmlu_test]
+template: fewshot
+lang: en
+n_shot: 5
+
+### output
+save_dir: saves/Companion-Chat-L3-8B-20240701-v1/eval_ck
+
+### eval
+batch_size: 4
