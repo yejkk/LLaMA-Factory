@@ -714,6 +714,15 @@ _register_template(
     replace_eos=True,
 )
 
+_register_template(
+    name="wizard",
+    format_user=StringFormatter(slots=["USER: {{content}}\nASSISTANT:"]),
+    # format_assistant=StringFormatter(slots=["{{content}}</s>\n"]),
+    format_assistant=StringFormatter(slots=["{{content}}","</s>"]),
+    format_system=StringFormatter(slots=["{{content}}\n\n"]),
+    format_separator=EmptyFormatter(slots=["\n"]),
+    format_prefix=EmptyFormatter(slots=[{"bos_token"}]),
+)
 
 _register_template(
     name="mistral",

@@ -167,3 +167,41 @@ def test_yi_template():
     )
     answer_str = "很高兴认识你！<|im_end|>"
     _check_template("01-ai/Yi-1.5-6B-Chat", "yi", prompt_str, answer_str)
+
+def test_wizard_template():
+    model_id = "lucyknada/microsoft_WizardLM-2-7B"
+    print("yx test start")
+    # _check_template(model_id, "wizard", prompt_str, answer_str, extra_str="\n")
+    tokenizer = AutoTokenizer.from_pretrained(model_id)
+    tmp_messages = [
+        {"role": "user", "content": "How are you"},
+        {"role": "assistant", "content": "I am fine!"},
+        {"role": "user", "content": "How are you2"},
+        {"role": "assistant", "content": "I am fine!2"},
+        {"role": "user", "content": "你好"}
+    ]
+    tmp_messages = tmp_messages + [{"role": "assistant", "content": ""}]
+    print(tokenizer.chat_template)
+    print("---------")
+    template = get_template_and_fix_tokenizer(tokenizer, name="wizard")
+    print(tokenizer.chat_template)
+    print("---------")
+    prompt_ids,answer_ids = template.encode_oneturn(tokenizer, tmp_messages,"test",None)
+    token_res = tokenizer.decode(prompt_ids, skip_special_tokens=False,clean_up_tokenization_spaces=True)
+    # print(token_res)
+    print("prompt_ids:",repr(token_res))
+    token_res = tokenizer.decode(answer_ids, skip_special_tokens=False,clean_up_tokenization_spaces=True)
+    # print(token_res)
+    print("answer_ids:",repr(token_res))
+    res = '<s>test\n\nUSER: How are you\nASSISTANT: I am fine!</s>\nUSER: 你好\nASSISTANT:'
+    # assert res==token_res
+    old_tokenizer = AutoTokenizer.from_pretrained(model_id)
+    old_res = old_tokenizer.apply_chat_template([
+        {"role": "system", "content": "test"},
+        {"role": "user", "content": "How are you"},
+        {"role": "assistant", "content": "I am fine!"},
+        {"role": "user", "content": "How are you2"},
+        {"role": "assistant", "content": "I am fine!2"},
+        {"role": "user", "content": "你好"}
+    ],tokenize=False,add_generation_prompt=True)
+    print(repr(old_res))
