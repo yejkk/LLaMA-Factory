@@ -1,5 +1,5 @@
 ### model
-model_name_or_path: /data/models/meta-llama/Llama-3.1-8B-Instruct
+model_name_or_path: /data/models/Hermes-3-Llama-3.1-8B
 
 ### method
 stage: sft
@@ -17,7 +17,7 @@ overwrite_cache: true
 preprocessing_num_workers: 16
 
 ### output
-output_dir: saves/llama3.1-8b-20240822/full/sft
+output_dir: saves/Hermes-8b-20240823/full/sft
 logging_steps: 10
 save_steps: 5000
 plot_loss: true

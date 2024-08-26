@@ -1,5 +1,5 @@
 ### model
-model_name_or_path: /opt/services/yx_test/llama-factory-new/saves/llama3.1-8b-20240822/full/sft
+model_name_or_path: /opt/services/yx_test/llama-factory-new/saves/Hermes-8b-20240823/full/sft
 
 ### method
 finetuning_type: full
@@ -11,7 +11,7 @@ lang: en
 n_shot: 5
 
 ### output
-save_dir: saves/llama3.1-8b-20240822/eval
+save_dir: saves/Hermes-8b-20240823/eval
 
 ### eval
 batch_size: 2
