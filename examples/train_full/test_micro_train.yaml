@@ -1,5 +1,5 @@
 ### model
-model_name_or_path: /data/models/Hermes-3-Llama-3.1-8B
+model_name_or_path: /data/models/microsoft/Phi-3.5-mini-instruct
 
 ### method
 stage: sft
@@ -10,14 +10,14 @@ deepspeed: /data/configs/ds_config.json
 ### dataset
 dataset: ihandy_test
 dataset_dir: /data/datasets/yx_test
-template: llama3
-cutoff_len: 4096
+template: phi
+cutoff_len: 8096
 max_samples: 100000
 overwrite_cache: true
 preprocessing_num_workers: 16
 
 ### output
-output_dir: saves/Hermes-8b-20240823/full/sft
+output_dir: /opt/services/yx_test/llama-factory-new/saves/Phi-3.5-mini-instruct-20240930/full/sft
 logging_steps: 10
 save_steps: 5000
 plot_loss: true
@@ -32,4 +32,5 @@ lr_scheduler_type: cosine
 warmup_ratio: 0.1
 bf16: true
 ddp_timeout: 180000000
+flash_attn: fa2
 # use_unsloth: true

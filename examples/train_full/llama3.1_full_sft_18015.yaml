@@ -8,7 +8,7 @@ finetuning_type: full
 deepspeed: /data/configs/ds_config.json
 
 ### dataset
-dataset: ihandy_test
+dataset: ihandy_test_3500
 dataset_dir: /data/datasets/yx_test
 template: llama3
 cutoff_len: 4096
@@ -17,7 +17,7 @@ overwrite_cache: true
 preprocessing_num_workers: 16
 
 ### output
-output_dir: saves/llama3.1-8b-20240822/full/sft
+output_dir: /opt/services/yx_test/llama-factory-new/saves/llama3.1-8b-20240930/full/sft
 logging_steps: 10
 save_steps: 5000
 plot_loss: true

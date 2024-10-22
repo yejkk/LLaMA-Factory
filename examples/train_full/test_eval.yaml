@@ -1,17 +1,17 @@
 ### model
-model_name_or_path: /opt/services/yx_test/llama-factory-new/saves/Hermes-8b-20240823/full/sft
+model_name_or_path: /opt/services/yx_test/llama-factory-new/saves/microsoft_WizardLM-2-7B-2024-0828/full/sft
 
 ### method
 finetuning_type: full
 
 ### dataset
 task: mmlu_test # choices: [mmlu_test, ceval_validation, cmmlu_test]
-template: llama3
+template: wizard
 lang: en
 n_shot: 5
 
 ### output
-save_dir: saves/Hermes-8b-20240823/eval
+save_dir: saves/microsoft_WizardLM-2-7B-2024-0828/eval
 
 ### eval
 batch_size: 2
