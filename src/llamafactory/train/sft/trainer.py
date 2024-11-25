@@ -63,10 +63,57 @@ class CustomSeq2SeqTrainer(Seq2SeqTrainer):
 
             self.accelerator.clip_grad_norm_ = MethodType(clip_grad_norm_old_version, self.accelerator)
             self.add_callback(BAdamCallback)
-
+    
     def create_optimizer(self) -> "torch.optim.Optimizer":
         if self.optimizer is None:
-            self.optimizer = create_custom_optimzer(self.model, self.args, self.finetuning_args)
+            param_groups = []
+            num_layers = self.model.config.num_hidden_layers
+            
+            # 更细致的学习率分层策略
+            for name, param in self.model.named_parameters():
+                if not param.requires_grad:
+                    continue
+                    
+                # LayerNorm层使用较小的学习率和权重衰减
+                if 'LayerNorm' in name or 'layer_norm' in name:
+                    param_groups.append({
+                        "params": param,
+                        "lr": self.args.learning_rate * 0.02,  # 显著降低LayerNorm的学习率
+                        "weight_decay": 0.0  # 移除LayerNorm的权重衰减
+                    })
+                # 针对不同深度的层采用渐进式学习率
+                elif 'layer' in name:
+                    layer_num = int(''.join(filter(str.isdigit, name.split('.')[2])))
+                    
+                    # 使用指数增长的学习率策略
+                    layer_scale = 0.1 + 0.9 * (layer_num / num_layers) ** 2
+                    
+                    param_groups.append({
+                        "params": param,
+                        "lr": self.args.learning_rate * layer_scale,
+                        "weight_decay": self.args.weight_decay
+                    })
+                # 嵌入层使用非常小的学习率
+                elif any(n in name.lower() for n in ['embed', 'wte', 'wpe']):
+                    param_groups.append({
+                        "params": param,
+                        "lr": self.args.learning_rate * 0.02,
+                        "weight_decay": self.args.weight_decay * 0.5
+                    })
+                # 其他参数使用默认学习率
+                else:
+                    param_groups.append({
+                        "params": param,
+                        "lr": self.args.learning_rate,
+                        "weight_decay": self.args.weight_decay
+                    })
+            print("yx_new_optimizer")
+            self.optimizer = create_custom_optimzer(
+                param_groups,
+                self.args,
+                self.finetuning_args
+            )
+        
         return super().create_optimizer()
 
     def create_scheduler(
