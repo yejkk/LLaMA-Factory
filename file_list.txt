@@ -27,6 +27,7 @@ data/belle_multiturn/belle_multiturn.py
 data/c4_demo.json
 data/dataset_info.json
 data/dpo_en_demo.json
+data/dpo_ihandy_demo.json
 data/dpo_zh_demo.json
 data/glaive_toolcall_en_demo.json
 data/glaive_toolcall_zh_demo.json
@@ -57,6 +58,10 @@ evaluation/mmlu/mmlu.zip
 examples/README.md
 examples/README_zh.md
 examples/accelerate/fsdp_config.yaml
+examples/ai_companion/llama3.1_full_sft.yaml
+examples/ai_companion/llama3.2_freeze_sft.yaml
+examples/ai_companion/llama3.2_full_sft.yaml
+examples/ai_companion/test_micro_train.yaml
 examples/deepspeed/ds_z++_config.json
 examples/deepspeed/ds_z0_config.json
 examples/deepspeed/ds_z2_config.json
@@ -84,12 +89,14 @@ examples/train_full/apple_dclm_7b_full_sft_18015.yaml
 examples/train_full/apple_dclm_7b_full_sft_18015_eval.yaml
 examples/train_full/gemma2-2b_full_sft_18015.yaml
 examples/train_full/gemma2-2b_full_sft_18015_val.yaml
+examples/train_full/llama3.1_full_dpo.yaml
 examples/train_full/llama3.1_full_sft_18015.yaml
 examples/train_full/llama3.1_full_sft_18015_eval.yaml
 examples/train_full/llama3.1_full_sft_18015_predict.yaml
 examples/train_full/llama3.1_full_sft_test_eval.yaml
 examples/train_full/llama3.1_origin_full_sft_18015.yaml
 examples/train_full/llama3.1_origin_full_sft_18015_eval.yaml
+examples/train_full/llama3.2_full_dpo.yaml
 examples/train_full/llama3.2_full_sft.yaml
 examples/train_full/llama3_20240701_eval.yaml
 examples/train_full/llama3_full_predict.yaml
@@ -115,6 +122,7 @@ examples/train_qlora/llama3_lora_sft_aqlm.yaml
 examples/train_qlora/llama3_lora_sft_awq.yaml
 examples/train_qlora/llama3_lora_sft_gptq.yaml
 examples/train_qlora/llama3_lora_sft_otfq.yaml
+file_list.txt
 push.sh
 pyproject.toml
 requirements.txt
