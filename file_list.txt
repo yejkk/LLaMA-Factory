@@ -61,6 +61,7 @@ examples/accelerate/fsdp_config.yaml
 examples/ai_companion/llama3.1_full_sft.yaml
 examples/ai_companion/llama3.2_freeze_sft.yaml
 examples/ai_companion/llama3.2_full_sft.yaml
+examples/ai_companion/llama3_full_sft.yaml
 examples/ai_companion/test_micro_train.yaml
 examples/deepspeed/ds_z++_config.json
 examples/deepspeed/ds_z0_config.json
