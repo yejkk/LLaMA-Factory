@@ -201,7 +201,7 @@ def get_train_args(args: Optional[Dict[str, Any]] = None) -> _TRAIN_CLS:
     if training_args.parallel_mode == ParallelMode.NOT_DISTRIBUTED:
         raise ValueError("Please launch distributed training with `llamafactory-cli` or `torchrun`.")
 
-    if training_args.deepspeed and training_args.parallel_mode != ParallelMode.DISTRIBUTED:
+    if training_args.deepspeed and training_args.parallel_mode != ParallelMode.DISTRIBUTED and os.environ.get("FORCE_TORCHRUN", "0").lower() != "1":
         raise ValueError("Please use `FORCE_TORCHRUN=1` to launch DeepSpeed training.")
 
     if training_args.max_steps == -1 and data_args.streaming:

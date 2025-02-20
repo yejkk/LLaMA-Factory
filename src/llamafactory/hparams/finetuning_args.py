@@ -208,7 +208,18 @@ class RLHFArguments:
         default="lora",
         metadata={"help": "The type of the reward model in PPO training. Lora model only supports lora training."},
     )
-
+    grpo_use_vllm: Optional[bool] = field(
+        default=False,
+        metadata={
+            "help": "Whether to use vLLM for generating completions. If set to `True`, ensure that a GPU is kept "
+            "unused for training, as vLLM will require one for generation. vLLM must be installed "
+            "(`pip install vllm`)."
+        },
+    )
+    grpo_beta: float = field(
+        default=0.04,
+        metadata={"help": "KL coefficient."},
+    )
 
 @dataclass
 class GaloreArguments:

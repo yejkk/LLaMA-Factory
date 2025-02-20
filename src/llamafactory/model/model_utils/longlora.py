@@ -25,8 +25,8 @@ import torch.nn as nn
 from transformers.models.llama.modeling_llama import (
     Cache,
     LlamaAttention,
-    LlamaFlashAttention2,
-    LlamaSdpaAttention,
+    # LlamaFlashAttention2,
+    # LlamaSdpaAttention,
     apply_rotary_pos_emb,
     repeat_kv,
 )
@@ -135,7 +135,7 @@ def llama_attention_forward(
 # Modified from:
 # https://github.com/huggingface/transformers/blob/v4.40.0/src/transformers/models/llama/modeling_llama.py
 def llama_flash_attention_2_forward(
-    self: "LlamaFlashAttention2",
+    self: "LlamaAttention",
     hidden_states: "torch.Tensor",
     attention_mask: Optional["torch.Tensor"] = None,
     position_ids: Optional["torch.LongTensor"] = None,
@@ -250,7 +250,7 @@ def llama_flash_attention_2_forward(
 # Modified from:
 # https://github.com/huggingface/transformers/blob/v4.40.0/src/transformers/models/llama/modeling_llama.py
 def llama_sdpa_attention_forward(
-    self: "LlamaSdpaAttention",
+    self: "LlamaAttention",
     hidden_states: "torch.Tensor",
     attention_mask: Optional["torch.Tensor"] = None,
     position_ids: Optional["torch.LongTensor"] = None,
@@ -352,11 +352,14 @@ def llama_sdpa_attention_forward(
     return attn_output, None, past_key_value
 
 
-def _apply_llama_patch() -> None:
-    require_version("transformers>=4.41.2,<=4.45.2", "To fix: pip install transformers>=4.41.2,<=4.45.2")
-    LlamaAttention.forward = llama_attention_forward
-    LlamaFlashAttention2.forward = llama_flash_attention_2_forward
-    LlamaSdpaAttention.forward = llama_sdpa_attention_forward
+def _apply_llama_patch(flash_attn: str) -> None:
+    # require_version("transformers>=4.41.2,<=4.45.2", "To fix: pip install transformers>=4.41.2,<=4.45.2")
+    if flash_attn == "fa2":
+        LlamaAttention.forward = llama_flash_attention_2_forward
+    elif flash_attn == "sdpa":
+        LlamaAttention.forward = llama_sdpa_attention_forward
+    else:
+        LlamaAttention.forward = llama_attention_forward
 
 
 def configure_longlora(config: "PretrainedConfig", model_args: "ModelArguments", is_trainable: bool) -> None:
@@ -367,7 +370,7 @@ def configure_longlora(config: "PretrainedConfig", model_args: "ModelArguments",
 
     if getattr(config, "model_type", None) in SUPPORTED_CLASS_FOR_S2ATTN:
         setattr(config, "group_size_ratio", 0.25)
-        _apply_llama_patch()
+        _apply_llama_patch(model_args.flash_attn)
         logger.info("Using shift short attention with group_size_ratio=1/4.")
     else:
         logger.warning("Current model does not support shift short attention.")

@@ -98,3 +98,27 @@ def preprocess_unsupervised_dataset(
 def print_unsupervised_dataset_example(example: Dict[str, List[int]], tokenizer: "PreTrainedTokenizer") -> None:
     print("input_ids:\n{}".format(example["input_ids"]))
     print("inputs:\n{}".format(tokenizer.decode(example["input_ids"], skip_special_tokens=False)))
+
+
+def preprocess_grpo_dataset(
+    examples: Dict[str, List[Any]],
+    template: "Template",
+    tokenizer: "PreTrainedTokenizer",
+    processor: Optional["ProcessorMixin"],
+    data_args: "DataArguments",
+) -> Dict[str, List[Any]]:
+    model_inputs = defaultdict(list)
+    for i in range(len(examples["_prompt"])):
+        prompt = []
+        system=examples["_system"][i]
+        if system is not None:
+            prompt.append({"role": "system", "content": system})
+
+        prompt.extend(examples["_prompt"][i])
+        model_inputs['prompt'].append(prompt)
+        model_inputs['_response'].append(examples["_response"][i])
+
+    return model_inputs
+
+def print_grpo_dataset_example(example: Dict[str, List[int]], tokenizer: "PreTrainedTokenizer") -> None:
+    print("prompt:\n{}".format(example["prompt"]))

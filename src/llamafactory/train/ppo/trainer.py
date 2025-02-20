@@ -23,6 +23,7 @@ from types import MethodType
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple
 
 import torch
+import torch.nn.functional as F
 from accelerate.utils import DistributedDataParallelKwargs
 from tqdm import tqdm
 from transformers import GenerationConfig, Trainer, TrainerControl, TrainerState
@@ -33,7 +34,7 @@ from transformers.trainer_pt_utils import remove_dummy_checkpoint
 from transformers.trainer_utils import PREFIX_CHECKPOINT_DIR
 from transformers.utils import SAFE_WEIGHTS_NAME, WEIGHTS_NAME
 from trl import PPOConfig, PPOTrainer
-from trl.core import PPODecorators, logprobs_from_logits
+from trl.core import PPODecorators
 from trl.models.utils import unwrap_model_for_generation
 from typing_extensions import override
 
@@ -43,6 +44,16 @@ from ..callbacks import FixValueHeadModelCallback, SaveProcessorCallback
 from ..trainer_utils import create_custom_optimizer, create_custom_scheduler
 from .ppo_utils import dump_layernorm, get_rewards_from_server, replace_model, restore_layernorm
 
+def logprobs_from_logits(logits: torch.Tensor, labels: torch.Tensor, gather: bool = True) -> torch.Tensor:
+    """
+    See: https://github.com/pytorch/pytorch/issues/563#issuecomment-330103591
+    """
+    logp = F.log_softmax(logits, dim=2)
+
+    if not gather:
+        return logp
+    logpy = torch.gather(logp, 2, labels.unsqueeze(2)).squeeze(-1)
+    return logpy
 
 if TYPE_CHECKING:
     from datasets import Dataset

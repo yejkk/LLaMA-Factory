@@ -23,7 +23,7 @@ from .processors.supervised import (
     preprocess_supervised_dataset,
     print_supervised_dataset_example,
 )
-from .processors.unsupervised import preprocess_unsupervised_dataset, print_unsupervised_dataset_example
+from .processors.unsupervised import preprocess_unsupervised_dataset, print_unsupervised_dataset_example,preprocess_grpo_dataset,print_grpo_dataset_example
 
 
 if TYPE_CHECKING:
@@ -35,7 +35,7 @@ if TYPE_CHECKING:
 
 def get_preprocess_and_print_func(
     data_args: "DataArguments",
-    stage: Literal["pt", "sft", "rm", "ppo", "kto"],
+    stage: Literal["pt", "sft", "rm", "ppo", "kto","grpo"],
     template: "Template",
     tokenizer: "PreTrainedTokenizer",
     processor: Optional["ProcessorMixin"],
@@ -80,6 +80,15 @@ def get_preprocess_and_print_func(
             )
 
         print_function = partial(print_supervised_dataset_example, tokenizer=tokenizer)
+    elif stage == "grpo":
+        preprocess_func = partial(
+            preprocess_grpo_dataset,
+            template=template,
+            tokenizer=tokenizer,
+            processor=processor,
+            data_args=data_args,
+        )
+        print_function = partial(print_grpo_dataset_example, tokenizer=tokenizer)
     elif stage == "rm":
         preprocess_func = partial(
             preprocess_pairwise_dataset,

@@ -45,7 +45,7 @@ class CustomDPOTrainer(DPOTrainer):
         model: Union["PreTrainedModel", torch.nn.Module],
         ref_model: Optional[Union["PreTrainedModel", torch.nn.Module]],
         finetuning_args: "FinetuningArguments",
-        processor: Optional["ProcessorMixin"],
+        # processor: Optional["ProcessorMixin"],
         disable_dropout: bool = True,
         **kwargs,
     ):
@@ -93,8 +93,8 @@ class CustomDPOTrainer(DPOTrainer):
                 self.ref_model = self.accelerator.prepare_model(self.ref_model, evaluation_mode=True)
                 self.ref_model.eval()
 
-        if processor is not None:
-            self.add_callback(SaveProcessorCallback(processor))
+        # if processor is not None:
+        #     self.add_callback(SaveProcessorCallback(processor))
 
         if finetuning_args.pissa_convert:
             self.callback_handler.add_callback(PissaConvertCallback)

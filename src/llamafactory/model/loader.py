@@ -156,6 +156,7 @@ def load_model(
             if model_args.train_from_scratch:
                 model = load_class.from_config(config)
             else:
+                print("init_kwargs",init_kwargs)
                 model = load_class.from_pretrained(**init_kwargs)
 
         if model_args.mixture_of_depths == "convert":
