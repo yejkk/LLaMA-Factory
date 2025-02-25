@@ -87,6 +87,7 @@ examples/merge_lora/llama3_gptq.yaml
 examples/merge_lora/llama3_lora_sft.yaml
 examples/merge_lora/qwen2vl_lora_sft.yaml
 examples/train_full/grpo_sft_ds3.yaml
+examples/train_full/llama2-full.sft.yaml
 examples/train_full/llama3_full_predict.yaml
 examples/train_full/llama3_full_sft_ds3.yaml
 examples/train_full/qwen2vl_full_sft.yaml
@@ -108,6 +109,8 @@ examples/train_qlora/llama3_lora_sft_aqlm.yaml
 examples/train_qlora/llama3_lora_sft_awq.yaml
 examples/train_qlora/llama3_lora_sft_gptq.yaml
 examples/train_qlora/llama3_lora_sft_otfq.yaml
+file_list.txt
+push.sh
 pyproject.toml
 requirements.txt
 scripts/cal_flops.py
@@ -196,6 +199,7 @@ src/llamafactory/train/dpo/__init__.py
 src/llamafactory/train/dpo/trainer.py
 src/llamafactory/train/dpo/workflow.py
 src/llamafactory/train/grpo/__init__.py
+src/llamafactory/train/grpo/reward.py
 src/llamafactory/train/grpo/trainer.py
 src/llamafactory/train/grpo/workflow.py
 src/llamafactory/train/kto/__init__.py
