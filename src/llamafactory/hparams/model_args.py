@@ -15,10 +15,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from dataclasses import dataclass, field, fields
+import json
+from dataclasses import asdict, dataclass, field, fields
 from typing import Any, Dict, Literal, Optional, Union
 
 import torch
+from transformers.training_args import _convert_str_dict
 from typing_extensions import Self
 
 
@@ -56,20 +58,28 @@ class ProcessorArguments:
     Arguments pertaining to the image processor.
     """
 
-    image_resolution: int = field(
-        default=512,
-        metadata={"help": "Keeps the height or width of image below this resolution."},
+    image_max_pixels: int = field(
+        default=768 * 768,
+        metadata={"help": "The maximum number of pixels of image inputs."},
     )
-    video_resolution: int = field(
-        default=128,
-        metadata={"help": "Keeps the height or width of video below this resolution."},
+    image_min_pixels: int = field(
+        default=32 * 32,
+        metadata={"help": "The minimum number of pixels of image inputs."},
+    )
+    video_max_pixels: int = field(
+        default=256 * 256,
+        metadata={"help": "The maximum number of pixels of video inputs."},
+    )
+    video_min_pixels: int = field(
+        default=16 * 16,
+        metadata={"help": "The minimum number of pixels of video inputs."},
     )
     video_fps: float = field(
         default=2.0,
         metadata={"help": "The frames to sample per second for video inputs."},
     )
     video_maxlen: int = field(
-        default=64,
+        default=128,
         metadata={"help": "The maximum number of sampled frames for video inputs."},
     )
 
@@ -85,7 +95,7 @@ class ExportArguments:
         metadata={"help": "Path to the directory to save the exported model."},
     )
     export_size: int = field(
-        default=1,
+        default=5,
         metadata={"help": "The file shard size (in GB) of the exported model."},
     )
     export_device: Literal["cpu", "auto"] = field(
@@ -125,7 +135,7 @@ class VllmArguments:
     """
 
     vllm_maxlen: int = field(
-        default=2048,
+        default=4096,
         metadata={"help": "Maximum sequence (prompt + response) length of the vLLM engine."},
     )
     vllm_gpu_util: float = field(
@@ -139,6 +149,10 @@ class VllmArguments:
     vllm_max_lora_rank: int = field(
         default=32,
         metadata={"help": "Maximum rank of all LoRAs in the vLLM engine."},
+    )
+    vllm_config: Optional[Union[dict, str]] = field(
+        default=None,
+        metadata={"help": "Config to initialize the vllm engine. Please use JSON strings."},
     )
 
 
@@ -195,7 +209,7 @@ class ModelArguments(QuantizationArguments, ProcessorArguments, ExportArguments,
         default=True,
         metadata={"help": "Whether or not to use memory-efficient model loading."},
     )
-    rope_scaling: Optional[Literal["linear", "dynamic"]] = field(
+    rope_scaling: Optional[Literal["linear", "dynamic", "yarn", "llama3"]] = field(
         default=None,
         metadata={"help": "Which scaling strategy should be adopted for the RoPE embeddings."},
     )
@@ -230,6 +244,10 @@ class ModelArguments(QuantizationArguments, ProcessorArguments, ExportArguments,
     disable_gradient_checkpointing: bool = field(
         default=False,
         metadata={"help": "Whether or not to disable gradient checkpointing."},
+    )
+    use_reentrant_gc: bool = field(
+        default=True,
+        metadata={"help": "Whether or not to use reentrant gradient checkpointing."},
     )
     upcast_layernorm: bool = field(
         default=False,
@@ -275,6 +293,10 @@ class ModelArguments(QuantizationArguments, ProcessorArguments, ExportArguments,
         default=False,
         metadata={"help": "For debugging purposes, print the status of the parameters in the model."},
     )
+    trust_remote_code: bool = field(
+        default=False,
+        metadata={"help": "Whether to trust the execution of code from datasets/models defined on the Hub or not."},
+    )
     compute_dtype: Optional[torch.dtype] = field(
         default=None,
         init=False,
@@ -312,6 +334,9 @@ class ModelArguments(QuantizationArguments, ProcessorArguments, ExportArguments,
         if self.export_quantization_bit is not None and self.export_quantization_dataset is None:
             raise ValueError("Quantization dataset is necessary for exporting.")
 
+        if isinstance(self.vllm_config, str) and self.vllm_config.startswith("{"):
+            self.vllm_config = _convert_str_dict(json.loads(self.vllm_config))
+
     @classmethod
     def copyfrom(cls, source: "Self", **kwargs) -> "Self":
         init_args, lazy_args = {}, {}
@@ -327,3 +352,8 @@ class ModelArguments(QuantizationArguments, ProcessorArguments, ExportArguments,
             setattr(result, name, value)
 
         return result
+
+    def to_dict(self) -> Dict[str, Any]:
+        args = asdict(self)
+        args = {k: f"<{k.upper()}>" if k.endswith("token") else v for k, v in args.items()}
+        return args
