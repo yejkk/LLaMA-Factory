@@ -43,6 +43,7 @@ def run_grpo(
     tokenizer_module = load_tokenizer(model_args)
     tokenizer = tokenizer_module["tokenizer"]
     print("tokenizer.eos_token_id",tokenizer.eos_token_id)
+    tokenizer.padding_side = "left"
     tokenizer.pad_token_id = tokenizer.eos_token_id
     template = get_template_and_fix_tokenizer(tokenizer, data_args)
     dataset_module = get_dataset(template, model_args, data_args, training_args, stage="grpo", **tokenizer_module)

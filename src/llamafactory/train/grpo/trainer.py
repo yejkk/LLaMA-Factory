@@ -22,10 +22,11 @@ from types import MethodType
 from typing import Any,TYPE_CHECKING, Dict, Literal, Optional, Tuple, Union
 
 from ...extras.misc import  get_logits_processor
+from .reward import content_reward, format_reward
 
 import torch
 from torch import nn
-from transformers import Trainer
+from transformers import Trainer,GenerationConfig
 from accelerate.utils import broadcast_object_list, gather, gather_object
 from trl import GRPOTrainer,GRPOConfig
 from trl.trainer.grpo_trainer import RewardFunc
@@ -157,12 +158,18 @@ class CustomGRPOTrainer(GRPOTrainer, Trainer):
         # 初始化基类
         super().__init__(
             model=model,
-            reward_funcs=reward_len,
+            reward_funcs=[content_reward, format_reward],
             args=grpo_args,
             train_dataset=train_dataset,
             eval_dataset=eval_dataset,
             processing_class=processing_class
         )
+        if not self.use_vllm:
+            self.generation_config = GenerationConfig(
+                pad_token_id=self.processing_class.pad_token_id,
+                eos_token_id=[self.processing_class.eos_token_id] + self.processing_class.additional_special_tokens_ids,
+                **generating_args.to_dict(),
+            )
 
 
         # 添加处理器回调
@@ -233,7 +240,7 @@ class CustomGRPOTrainer(GRPOTrainer, Trainer):
             # Regular generation path
             with unwrap_model_for_generation(self.model, self.accelerator) as unwrapped_model:
                 prompt_completion_ids = unwrapped_model.generate(
-                    prompt_ids, attention_mask=prompt_mask, generation_config=self.generation_config, logits_processor=get_logits_processor()
+                    prompt_ids, attention_mask=prompt_mask, generation_config=self.generation_config, logits_processor=get_logits_processor(), synced_gpus=True
                 )
 
             # Compute prompt length and extract completion ids

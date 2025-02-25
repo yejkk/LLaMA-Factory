@@ -8,8 +8,8 @@ finetuning_type: full
 deepspeed: /data/configs/ds_config.json
 
 ### dataset
-dataset: ihandy_test
-dataset_dir: /data/datasets/yx_test
+dataset: oh_dcft_v3.1_claude_3_5_sonnet_20241022
+dataset_dir: /data/datasets/mlfoundations-dev/oh-dcft-v3.1-claude-3-5-sonnet-20241022
 template: llama3
 cutoff_len: 8192
 max_samples: 100000
@@ -17,7 +17,7 @@ overwrite_cache: true
 preprocessing_num_workers: 16
 
 ### output
-output_dir: /opt/services/yx_test/llama-factory-new-grpo/saves/Llama-3.2-3B-Instruct-2025-02-24_test/full/grpo
+output_dir: /opt/services/yx_test/llama-factory-new-grpo/saves/Llama-3.2-3B-Instruct-2025-02-17_test/full/grpo
 logging_steps: 10
 save_steps: 5000
 plot_loss: true
@@ -42,11 +42,6 @@ bf16: true
 ddp_timeout: 180000000
 # use_unsloth: true
 save_only_model: true
-### eval
-val_size: 0.1
-per_device_eval_batch_size: 1
-eval_strategy: steps
-eval_steps: 50
 # cp /data/datasets/yx_test/20250208_466_prompt1_7000_2.json /data/datasets/yx_test/20241230_claude_7000.json
 # sed -i "s|/llama3.2-3b-[0-9]\{12\}/|/llama3.2-3b-$(date +%Y%m%d%H%M)/|g" /opt/services/yx_test/llama-factory-new/examples/ai_companion/llama3.2_full_sft.yaml
 # WANDB_DISABLED=true CUDA_VISIBLE_DEVICES=0,1,2,3 llamafactory-cli train /opt/services/yx_test/llama-factory-new/examples/ai_companion/llama3.2_full_sft.yaml
