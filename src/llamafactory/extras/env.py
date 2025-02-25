@@ -26,11 +26,7 @@ import trl
 from transformers.utils import is_torch_cuda_available, is_torch_npu_available
 
 
-<<<<<<< HEAD
-VERSION = "0.9.1.dev5"
-=======
 VERSION = "0.9.2.dev0"
->>>>>>> 76314e6ad1ecaa44fcae4375dd0abf4ebaf1f924
 
 
 def print_env() -> None:
