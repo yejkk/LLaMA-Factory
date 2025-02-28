@@ -18,13 +18,14 @@ model = SentenceTransformer('all-MiniLM-L6-v2')
 def content_reward(completions,sigmoid_scale=10.0, sigmoid_shift=0.7,
                        high_reward_baseline=1.0, low_reward_baseline=0.0, negative_reward_threshold=0.6, negative_reward_value=-0.1, **kwargs):
     embeddings = model.encode([completion[0]['content'] for completion in completions])
+    # print("reward_len Received kwargs:", kwargs)  # 添加调试打印
     responses = kwargs['_response']
     embeddings_2 =  model.encode([completion[0]['content'] for completion in responses]) 
     similarity_matrix = util.pytorch_cos_sim(embeddings, embeddings_2)
     rewards = []
     for i in range(len(completions)):
         similarity = similarity_matrix[i][i].item()
-        print(similarity)
+        print('similarity:',similarity)
         # if similarity > 0.9:
         #     rewards.append(1.0)
         # elif similarity < 0.6:
@@ -37,6 +38,7 @@ def content_reward(completions,sigmoid_scale=10.0, sigmoid_shift=0.7,
         # 可选的负奖励
         if similarity < negative_reward_threshold:
             reward = negative_reward_value
+        print('reward:',reward)
         rewards.append(reward)
     return rewards
 

@@ -16,7 +16,9 @@ class GRPODatasetProcessor(DatasetProcessor):
             prompt.extend(examples["_prompt"][i])
             model_inputs['prompt'].append(prompt)
             model_inputs['completion'].append(examples["_response"][i])
+            model_inputs['_response'].append(examples["_response"][i])
         return model_inputs
 
     def print_data_example(self, example: Dict[str, List[int]]) -> None:
         print("prompt:\n{}".format(example["prompt"]))
+        print("completion:\n{}".format(example["completion"]))

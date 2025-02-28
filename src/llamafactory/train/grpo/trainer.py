@@ -145,6 +145,8 @@ class CustomGRPOTrainer(GRPOTrainer, Trainer):
             overwrite_output_dir=training_args.overwrite_output_dir,
             deepspeed=training_args.deepspeed,
             report_to=training_args.report_to,
+            eval_strategy=training_args.eval_strategy,
+            eval_steps=training_args.eval_steps,
             # log_with=training_args.report_to[0] if training_args.report_to else None,
             # project_kwargs={"logging_dir": training_args.logging_dir},
         )
