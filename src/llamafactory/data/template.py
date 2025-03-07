@@ -1549,3 +1549,12 @@ register_template(
     format_user=StringFormatter(slots=["<human>:{{content}}\n<bot>:"]),
     format_assistant=StringFormatter(slots=["{{content}}\n"]),
 )
+
+register_template(
+    name="instella",
+    format_user=StringFormatter(slots=["<|user|>\n{{content}}\n<|assistant|>\n"]),
+    format_assistant=StringFormatter(slots=["{{content}}<|endoftext|>\n"]),
+    format_system=StringFormatter(slots=["<|system|>\n{{content}}<|end|>\n"]),
+    format_prefix=EmptyFormatter(slots=[{"bos_token"}]),
+    stop_words=["<|endoftext|>"],
+)

@@ -69,8 +69,15 @@ def _check_template(model_id: str, template_name: str, prompt_str: str, answer_s
     content_ids = tokenizer.apply_chat_template(MESSAGES, tokenize=True)
     template = get_template_and_fix_tokenizer(tokenizer, DataArguments(template=template_name))
     prompt_ids, answer_ids = template.encode_oneturn(tokenizer, MESSAGES)
+    print(content_str)
+    print('===')
+    print(prompt_str + answer_str)
+    print(prompt_ids)
+    print('===')
+    print(answer_ids)
     assert content_str == prompt_str + answer_str
     assert content_ids == prompt_ids + answer_ids
+
     _check_tokenization(tokenizer, (prompt_ids, answer_ids), (prompt_str, answer_str))
 
 
@@ -233,3 +240,16 @@ def test_parse_qwen_template():
     assert template.format_system.slots == ["<|im_start|>system\n{{content}}<|im_end|>\n"]
     assert template.format_prefix.slots == []
     assert template.default_system == "You are a helpful assistant."
+
+@pytest.mark.parametrize("use_fast", [True])
+def test_instella_template(use_fast: bool):
+    # tokenizer = AutoTokenizer.from_pretrained("amd/Instella-3B-Instruct")
+    # template = parse_template(tokenizer)
+    # print(template.format_user.slots)
+    # print(template.format_assistant.slots)
+    # print(template.format_system.slots)
+    # print(template.format_prefix.slots)
+    # print(template.default_system)
+    prompt_str = ('<|endoftext|><|user|>\nHow are you\n<|assistant|>\nI am fine!<|endoftext|>\n<|user|>\n你好\n<|assistant|>\n')
+    answer_str = '很高兴认识你！<|endoftext|>'
+    _check_template("amd/Instella-3B-Instruct", "instella", prompt_str, answer_str, use_fast)
