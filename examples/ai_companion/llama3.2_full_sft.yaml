@@ -17,7 +17,7 @@ overwrite_cache: true
 preprocessing_num_workers: 16
 
 ### output
-output_dir: /opt/services/yx_test/llama-factory-new/saves/llama3.2-3b-202502260652/full/sft
+output_dir: /opt/services/yx_test/llama-factory-new-grpo/saves/llama3.2-3b-202502260652/full/sft
 logging_steps: 10
 save_steps: 5000
 plot_loss: true
@@ -34,3 +34,10 @@ bf16: true
 ddp_timeout: 180000000
 # use_unsloth: true
 save_only_model: true
+### eval
+eval_dataset: ihandy_eval
+per_device_eval_batch_size: 1
+eval_strategy: steps
+eval_steps: 50
+
+report_to: ["tensorboard"]

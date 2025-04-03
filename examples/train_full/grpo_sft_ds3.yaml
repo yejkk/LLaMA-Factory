@@ -17,9 +17,10 @@ overwrite_cache: true
 preprocessing_num_workers: 16
 
 ### output
-output_dir: /opt/services/yx_test/llama-factory-new-grpo/saves/Llama-3.2-3B-Instruct-2025-02-24_test/full/grpo
+output_dir: /opt/services/yx_test/llama-factory-new-grpo/test-saves/Llama-3.2-3B-Instruct-2025-03-25-test/full/grpo
+# resume_from_checkpoint: /opt/services/yx_test/llama-factory-new-grpo/test-saves/Llama-3.2-3B-Instruct-2025-03-21-test/full/grpo/checkpoint-50
 logging_steps: 10
-save_steps: 5000
+save_steps: 100
 plot_loss: true
 overwrite_output_dir: true
 
@@ -29,7 +30,7 @@ vllm_gpu_util: 0.9
 temperature: 1
 max_length: 8192
 num_beams: 2
-logging_dir: /opt/services/yx_test/llama-factory-new-grpo/saves/Llama-3.2-1B-Instruct-2025-02-17_test/logs
+logging_dir: /opt/services/yx_test/llama-factory-new-grpo/test-saves/Llama-3.2-1B-Instruct-2025-03-25-test/logs
 
 ### train
 per_device_train_batch_size: 2
@@ -41,13 +42,17 @@ warmup_ratio: 0.1
 bf16: true
 ddp_timeout: 180000000
 # use_unsloth: true
-save_only_model: true
+# save_only_model: true
 ### eval
-val_size: 0.1
-per_device_eval_batch_size: 1
+eval_dataset: ihandy_eval
+per_device_eval_batch_size: 8
 eval_strategy: steps
 eval_steps: 50
+# eval_dataset: ihandy_eval
+# per_device_eval_batch_size: 8
+# eval_strategy: epoch
 # cp /data/datasets/yx_test/20250208_466_prompt1_7000_2.json /data/datasets/yx_test/20241230_claude_7000.json
 # sed -i "s|/llama3.2-3b-[0-9]\{12\}/|/llama3.2-3b-$(date +%Y%m%d%H%M)/|g" /opt/services/yx_test/llama-factory-new/examples/ai_companion/llama3.2_full_sft.yaml
 # WANDB_DISABLED=true CUDA_VISIBLE_DEVICES=0,1,2,3 llamafactory-cli train /opt/services/yx_test/llama-factory-new/examples/ai_companion/llama3.2_full_sft.yaml
 
+report_to: ["tensorboard"]

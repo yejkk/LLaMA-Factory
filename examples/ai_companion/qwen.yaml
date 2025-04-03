@@ -10,14 +10,14 @@ deepspeed: /data/configs/ds_config.json
 ### dataset
 dataset: ihandy_test
 dataset_dir: /data/datasets/yx_test
-template: phi4
+template: qwen
 cutoff_len: 8096
 max_samples: 100000
 overwrite_cache: true
 preprocessing_num_workers: 16
 
 ### output
-output_dir: /opt/services/yx_test/llama-factory-new/saves/phi4-14b-202502192149/full/sft
+output_dir: /opt/services/yx_test/llama-factory-new-grpo/saves/qwen2.5-32b-202502192149/full/sft
 logging_steps: 10
 save_steps: 5000
 plot_loss: true

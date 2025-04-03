@@ -1,17 +1,18 @@
 ### model
-model_name_or_path: /data/models/meta-llama/Llama-3.1-8B-Instruct
+model_name_or_path: /data/models/amd/Instella-3B-Instruct
 
 ### method
 stage: sft
 do_train: true
 finetuning_type: full
 deepspeed: /data/configs/ds_config.json
+trust_remote_code: true
 
 ### dataset
 dataset: ihandy_test
 dataset_dir: /data/datasets/yx_test
-template: llama3
-cutoff_len: 8192
+template: instella
+cutoff_len: 4096
 max_samples: 100000
 overwrite_cache: true
 preprocessing_num_workers: 16
@@ -34,11 +35,3 @@ bf16: true
 ddp_timeout: 180000000
 # use_unsloth: true
 save_only_model: true
-
-report_to: ["tensorboard"]
-
-### eval
-eval_dataset: ihandy_eval
-per_device_eval_batch_size: 8
-eval_strategy: steps
-eval_steps: 50

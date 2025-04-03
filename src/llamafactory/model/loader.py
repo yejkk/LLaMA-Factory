@@ -23,6 +23,7 @@ from transformers import (
     AutoModelForVision2Seq,
     AutoProcessor,
     AutoTokenizer,
+    Gemma3ForConditionalGeneration,
 )
 from trl import AutoModelForCausalLMWithValueHead
 
@@ -151,6 +152,9 @@ def load_model(
                 load_class = AutoModelForVision2Seq
             elif type(config) in AutoModelForSeq2SeqLM._model_mapping.keys():
                 load_class = AutoModelForSeq2SeqLM
+            elif 'gemma-3' in model_args.model_name_or_path or 'gemma3' in model_args.model_name_or_path:
+                print(model_args.model_name_or_path)
+                load_class = Gemma3ForConditionalGeneration
             else:
                 load_class = AutoModelForCausalLM
 

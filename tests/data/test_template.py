@@ -53,7 +53,7 @@ def _check_tokenization(
         assert tokenizer.decode(input_ids) == text
 
 
-def _check_template(model_id: str, template_name: str, prompt_str: str, answer_str: str, use_fast: bool) -> None:
+def _check_template(model_id: str, template_name: str, prompt_str: str, answer_str: str, use_fast: bool,system:str = None) -> None:
     r"""
     Checks template.
 
@@ -65,15 +65,20 @@ def _check_template(model_id: str, template_name: str, prompt_str: str, answer_s
         use_fast: whether to use fast tokenizer.
     """
     tokenizer = AutoTokenizer.from_pretrained(model_id, use_fast=use_fast, token=HF_TOKEN)
-    content_str = tokenizer.apply_chat_template(MESSAGES, tokenize=False)
-    content_ids = tokenizer.apply_chat_template(MESSAGES, tokenize=True)
+    m = MESSAGES.copy()
+    if system is not None:
+        m.insert(0, {"role": "system", "content": system})
+    content_str = tokenizer.apply_chat_template(m, tokenize=False)
+    content_ids = tokenizer.apply_chat_template(m, tokenize=True)
     template = get_template_and_fix_tokenizer(tokenizer, DataArguments(template=template_name))
-    prompt_ids, answer_ids = template.encode_oneturn(tokenizer, MESSAGES)
+    prompt_ids, answer_ids = template.encode_oneturn(tokenizer, MESSAGES,system=system)
+    print('content_str===')
     print(content_str)
-    print('===')
+    print('prompt_str + answer_str===')
     print(prompt_str + answer_str)
+    print('prompt_ids===')
     print(prompt_ids)
-    print('===')
+    print('answer_ids===')
     print(answer_ids)
     assert content_str == prompt_str + answer_str
     assert content_ids == prompt_ids + answer_ids
@@ -253,3 +258,11 @@ def test_instella_template(use_fast: bool):
     prompt_str = ('<|endoftext|><|user|>\nHow are you\n<|assistant|>\nI am fine!<|endoftext|>\n<|user|>\n你好\n<|assistant|>\n')
     answer_str = '很高兴认识你！<|endoftext|>'
     _check_template("amd/Instella-3B-Instruct", "instella", prompt_str, answer_str, use_fast)
+
+@pytest.mark.parametrize("use_fast", [True])
+def test_gemma3_template(use_fast: bool):
+    tokenizer = AutoTokenizer.from_pretrained("google/gemma-3-12b-it")
+    content_str = tokenizer.apply_chat_template(MESSAGES, tokenize=False,add_generation_prompt=True)
+    prompt_str = '<bos><start_of_turn>user\nYou are a helpful assistant.\n\nHow are you<end_of_turn>\n<start_of_turn>model\nI am fine!<end_of_turn>\n<start_of_turn>user\n你好<end_of_turn>\n<start_of_turn>model\n'
+    answer_str = '很高兴认识你！<end_of_turn>\n'
+    _check_template("google/gemma-3-12b-it", "gemma3", prompt_str, answer_str, use_fast,system="You are a helpful assistant.")
