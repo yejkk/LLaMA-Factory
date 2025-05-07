@@ -70,8 +70,12 @@ examples/README.md
 examples/README_zh.md
 examples/accelerate/fsdp_config.yaml
 examples/ai_companion/amd.yaml
+examples/ai_companion/grpo_sft_ds3.yaml
 examples/ai_companion/llama3.1_full_sft.yaml
 examples/ai_companion/llama3.2_full_sft.yaml
+examples/ai_companion/llama3.2_full_sft_test.yaml
+examples/ai_companion/llama3.2_full_sft_test_2.yaml
+examples/ai_companion/llama3.2_full_sft_test_3.yaml
 examples/ai_companion/llama_lora_sft.yaml
 examples/ai_companion/phi4_full_sft.yaml
 examples/ai_companion/qwen.yaml

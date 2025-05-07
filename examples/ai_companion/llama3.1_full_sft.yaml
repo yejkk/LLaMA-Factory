@@ -36,9 +36,8 @@ ddp_timeout: 180000000
 save_only_model: true
 
 report_to: ["tensorboard"]
-
 ### eval
-eval_dataset: ihandy_eval
-per_device_eval_batch_size: 8
-eval_strategy: steps
-eval_steps: 50
+# eval_dataset: ihandy_eval
+# per_device_eval_batch_size: 8
+# eval_strategy: steps
+# eval_steps: 50

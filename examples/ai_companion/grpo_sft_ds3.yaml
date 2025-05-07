@@ -17,10 +17,11 @@ overwrite_cache: true
 preprocessing_num_workers: 16
 
 ### output
-output_dir: /opt/services/yx_test/llama-factory-new-grpo/test-saves/Llama-3.2-3B-Instruct-2025-04-24-len490-test/full/grpo
-# resume_from_checkpoint: /opt/services/yx_test/llama-factory-new-grpo/test-saves/Llama-3.2-3B-Instruct-2025-04-23-len490-test/full/grpo/checkpoint-180
+output_dir: /opt/services/yx_test/llama-factory-new-grpo/test-saves/Llama-3.2-3B-Instruct-2025-04-25-test/full/grpo
+# resume_from_checkpoint: /opt/services/yx_test/llama-factory-new-grpo/test-saves/Llama-3.2-3B-Instruct-2025-03-21-test/full/grpo/checkpoint-50
 logging_steps: 10
-save_steps: 50
+# save_strategy: epoch
+save_steps: 500
 plot_loss: true
 overwrite_output_dir: true
 
@@ -29,8 +30,8 @@ grpo_use_vllm: false
 vllm_gpu_util: 0.9
 temperature: 1
 max_length: 8192
-num_beams: 4
-# logging_dir: /opt/services/yx_test/llama-factory-new-grpo/test-saves/Llama-3.2-1B-Instruct-2025-03-25-test/logs
+num_beams: 2
+logging_dir: /opt/services/yx_test/llama-factory-new-grpo/test-saves/Llama-3.2-1B-Instruct-2025-03-25-test/logs
 
 ### train
 per_device_train_batch_size: 2
